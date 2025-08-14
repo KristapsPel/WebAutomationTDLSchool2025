@@ -12,15 +12,15 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.io.File;
 import java.lang.reflect.Method;
 
 public class NavigationTest {
     private WebDriver driver;
+    private ExtentReports reports;
+    private ExtentTest test;
 
     @AfterMethod
     private void tearDown() {
@@ -29,26 +29,34 @@ public class NavigationTest {
     }
 
     @BeforeMethod
-    private void setUpBrowser() {
+    private void setUpBrowser(Method method) {
+        String testName = method.getAnnotation(Test.class).testName();
+        String description = method.getAnnotation(Test.class).description();
+
+        test = reports.createTest(testName, description);
         this.driver = setUpWebDriverManage("edge");
         //this.driver.manage().window().maximize();
         this.driver.get("https://tdlschool.com/");
     }
 
+    @BeforeClass
+    private void setUpReport() {
+        ExtentSparkReporter reportTemplate = new ExtentSparkReporter(System.getProperty("user.dir") +
+                File.separator+"reports" +
+                File.separator+"FULL_TestReport.html");
+
+        this.reports = new ExtentReports();
+        this.reports.attachReporter(reportTemplate);
+    }
+
+    @AfterClass
+    private void createReport (){
+        this.reports.flush();
+    }
+
     @Test (testName = "Navigate to Career Paths page",
             description = "We are opening TDL School page and entering text in footer")
-    public void openTDLSchoolPage(Method method) throws InterruptedException {
-        ExtentSparkReporter sparkReporter = new ExtentSparkReporter(
-                System.getProperty("user.dir") +
-                        File.separator + "reports" +
-                        File.separator + "TestReport.html");
-        ExtentReports reports = new ExtentReports();
-        reports.attachReporter(sparkReporter);
-
-        String testName = method.getAnnotation(Test.class).testName();
-        String description = method.getAnnotation(Test.class).description();
-
-        ExtentTest test = reports.createTest(testName, description);
+    public void openTDLSchoolPage() throws InterruptedException {
         Thread.sleep(2000);
 
         test.log(Status.INFO, "Check that logo is Displayed");
@@ -74,15 +82,11 @@ public class NavigationTest {
         emailInputField.sendKeys("test");
         test.log(Status.PASS, "Text entered in email field");
 
-        Thread.sleep(1000);
-
         Thread.sleep(2000);
         test.log(Status.INFO, "Title:" + driver.getTitle());
         test.log(Status.INFO, "URL:" + driver.getCurrentUrl());
 
         addScreenshotToReport(Status.PASS, test);
-
-        reports.flush();
     }
 
     private void addScreenshotToReport (Status status, ExtentTest test){
@@ -95,17 +99,7 @@ public class NavigationTest {
 
     @Test(testName = "Upcoming Courses check",
     description = "Check that correct amount of courses is shown in landing page")
-    public void checkUpcomingCoursesCount(Method method) throws InterruptedException {
-        ExtentSparkReporter templateReport = new ExtentSparkReporter(System.getProperty("user.dir")+
-                File.separator +"reports"+
-                File.separator+ "TestReport2.html");
-
-        ExtentReports reports = new ExtentReports();
-        reports.attachReporter(templateReport);
-
-        ExtentTest test = reports.createTest(method.getAnnotation(Test.class).testName(),
-                method.getAnnotation(Test.class).description());
-
+    public void checkUpcomingCoursesCount() throws InterruptedException {
         test.log(Status.INFO, "Check if TDL School logo is Displayed");
         boolean isLogoDisplayed = driver.findElement(By.className("navigation__logo")).isDisplayed();
         Thread.sleep(5000);
@@ -122,8 +116,6 @@ public class NavigationTest {
         test.log(Status.PASS, "Visible count of upcoming courses is as expected");
 
         addScreenshotToReport(Status.PASS, test);
-
-        reports.flush();
     }
 
     private WebDriver setUpWebDriverManage(String browser) {

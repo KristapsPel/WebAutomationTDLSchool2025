@@ -83,9 +83,6 @@ public class NavigationTest {
         addScreenshotToReport(Status.PASS, test);
 
         reports.flush();
-
-
-
     }
 
     private void addScreenshotToReport (Status status, ExtentTest test){
@@ -96,19 +93,37 @@ public class NavigationTest {
         test.log(status, MediaEntityBuilder.createScreenCaptureFromBase64String(base64ScreenShot).build());
     }
 
-    @Test()
-    public void checkUpcomingCoursesCount() throws InterruptedException {
-        System.out.println("Check if TDL School logo is Displayed");
+    @Test(testName = "Upcoming Courses check",
+    description = "Check that correct amount of courses is shown in landing page")
+    public void checkUpcomingCoursesCount(Method method) throws InterruptedException {
+        ExtentSparkReporter templateReport = new ExtentSparkReporter(System.getProperty("user.dir")+
+                File.separator +"reports"+
+                File.separator+ "TestReport2.html");
+
+        ExtentReports reports = new ExtentReports();
+        reports.attachReporter(templateReport);
+
+        ExtentTest test = reports.createTest(method.getAnnotation(Test.class).testName(),
+                method.getAnnotation(Test.class).description());
+
+        test.log(Status.INFO, "Check if TDL School logo is Displayed");
         boolean isLogoDisplayed = driver.findElement(By.className("navigation__logo")).isDisplayed();
         Thread.sleep(5000);
         Assert.assertTrue(isLogoDisplayed, "TDL School logo can not be found");
-        System.out.println("Check that 4 courses are displayed in upcoming section");
+        test.log(Status.PASS, "TDL School logo is Displayed");
+
+        test.log(Status.INFO, "Check that 4 courses are displayed in upcoming section");
         int countOfVisibleCourses = driver.findElements(
                 By.cssSelector("a.course-suggestions__course-card--active"))
                 .size();
         Assert.assertEquals(countOfVisibleCourses, 4,
                 "Visible courses in Upcoming section is "+countOfVisibleCourses+
                         " but expected was 9.");
+        test.log(Status.PASS, "Visible count of upcoming courses is as expected");
+
+        addScreenshotToReport(Status.PASS, test);
+
+        reports.flush();
     }
 
     private WebDriver setUpWebDriverManage(String browser) {

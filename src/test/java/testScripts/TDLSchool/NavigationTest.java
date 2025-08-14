@@ -16,7 +16,8 @@ public class NavigationTest {
     public void openTDLSchoolPage () {
 
 //        WebDriver driver = setUpWebDriverManually("chrome");
-        WebDriver driver = setUpWebDriverManage("chrome");
+//        System.setProperty("wdm.edgeDriverUrl", "https://msedgedriver.microsoft.com/");
+        WebDriver driver = setUpWebDriverManage("edge");
         driver.manage().window().maximize();
         driver.get("https://tdlschool.com/");
         try {

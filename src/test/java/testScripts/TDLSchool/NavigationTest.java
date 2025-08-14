@@ -12,6 +12,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.testng.Assert;
+import org.testng.ITestResult;
 import org.testng.annotations.*;
 
 import java.io.File;
@@ -23,7 +24,12 @@ public class NavigationTest {
     private ExtentTest test;
 
     @AfterMethod
-    private void tearDown() {
+    private void tearDown(ITestResult testResult) {
+        if(testResult.getStatus() == ITestResult.FAILURE) {
+            test.log(Status.FAIL, testResult.getThrowable().getMessage());
+            addScreenshotToReport(Status.FAIL, test);
+        }
+
         this.driver.close();
         this.driver.quit();
     }
@@ -110,9 +116,9 @@ public class NavigationTest {
         int countOfVisibleCourses = driver.findElements(
                 By.cssSelector("a.course-suggestions__course-card--active"))
                 .size();
-        Assert.assertEquals(countOfVisibleCourses, 4,
+        Assert.assertEquals(countOfVisibleCourses, 5,
                 "Visible courses in Upcoming section is "+countOfVisibleCourses+
-                        " but expected was 9.");
+                        " but expected was 4.");
         test.log(Status.PASS, "Visible count of upcoming courses is as expected");
 
         addScreenshotToReport(Status.PASS, test);

@@ -43,4 +43,12 @@ public class HomePage {
         test.log(Status.PASS, " Click action on Career path did work");
     }
 
+    public void checkUpcomingLectureCount(int expectedCount) {
+        this.test.log(Status.INFO,
+                "Check that "+expectedCount+" upcoming courses is Displayed.");
+        Assert.assertEquals(listOfVisibleCourses.size(), expectedCount,
+                "Expected course count is not as expected");
+        this.test.log(Status.PASS, expectedCount+" courses is visible in Upcoming section.");
+    }
+
 }

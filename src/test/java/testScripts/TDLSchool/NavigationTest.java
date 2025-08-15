@@ -91,19 +91,11 @@ public class NavigationTest {
 
     @Test(testName = "Upcoming Courses check",
             description = "Check that correct amount of courses is shown in landing page")
-    public void checkUpcomingCoursesCount() throws InterruptedException {
+    public void checkUpcomingCoursesCount() {
         HomePage homePage = new HomePage(driver, test);
 
         homePage.verifyTDLSchoolLogoIsDisplayed();
-
-        test.log(Status.INFO, "Check that 4 courses are displayed in upcoming section");
-        int countOfVisibleCourses = driver.findElements(
-                        By.cssSelector("a.course-suggestions__course-card--active"))
-                .size();
-        Assert.assertEquals(countOfVisibleCourses, 5,
-                "Visible courses in Upcoming section is " + countOfVisibleCourses +
-                        " but expected was 4.");
-        test.log(Status.PASS, "Visible count of upcoming courses is as expected");
+        homePage.checkUpcomingLectureCount(4);
 
         addScreenshotToReport(Status.PASS, test);
     }

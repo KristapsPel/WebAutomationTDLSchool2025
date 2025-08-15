@@ -107,11 +107,9 @@ public class NavigationTest {
     @Test(testName = "Upcoming Courses check",
     description = "Check that correct amount of courses is shown in landing page")
     public void checkUpcomingCoursesCount() throws InterruptedException {
-        test.log(Status.INFO, "Check if TDL School logo is Displayed");
-        boolean isLogoDisplayed = driver.findElement(By.className("navigation__logo")).isDisplayed();
-        Thread.sleep(5000);
-        Assert.assertTrue(isLogoDisplayed, "TDL School logo can not be found");
-        test.log(Status.PASS, "TDL School logo is Displayed");
+        HomePage homePage = new HomePage(driver, test);
+
+        homePage.verifyTDLSchoolLogoIsDisplayed();
 
         test.log(Status.INFO, "Check that 4 courses are displayed in upcoming section");
         int countOfVisibleCourses = driver.findElements(
@@ -141,6 +139,7 @@ public class NavigationTest {
                 driver = new EdgeDriver();
                 break;
         }
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         return driver;
     }
 

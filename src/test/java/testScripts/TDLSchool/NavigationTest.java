@@ -17,21 +17,23 @@ import org.testng.annotations.*;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 public class NavigationTest {
     private WebDriver driver;
     private ExtentReports reports;
     private ExtentTest test;
 
-    @AfterMethod
-    private void tearDown(ITestResult testResult) {
-        if(testResult.getStatus() == ITestResult.FAILURE) {
-            test.log(Status.FAIL, testResult.getThrowable().getMessage());
-            addScreenshotToReport(Status.FAIL, test);
-        }
+    @BeforeClass
+    private void setUpReport() {
+        ExtentSparkReporter reportTemplate = new ExtentSparkReporter(
+                System.getProperty("user.dir") +
+                File.separator+"reports" +
+                File.separator+"FULL_TestReport.html");
 
-        this.driver.close();
-        this.driver.quit();
+        this.reports = new ExtentReports();
+        this.reports.attachReporter(reportTemplate);
     }
 
     @BeforeMethod
@@ -44,15 +46,15 @@ public class NavigationTest {
         //this.driver.manage().window().maximize();
         this.driver.get("https://tdlschool.com/");
     }
+    @AfterMethod
+    private void tearDown(ITestResult testResult) {
+        if(testResult.getStatus() == ITestResult.FAILURE) {
+            test.log(Status.FAIL, testResult.getThrowable().getMessage());
+            addScreenshotToReport(Status.FAIL, test);
+        }
 
-    @BeforeClass
-    private void setUpReport() {
-        ExtentSparkReporter reportTemplate = new ExtentSparkReporter(System.getProperty("user.dir") +
-                File.separator+"reports" +
-                File.separator+"FULL_TestReport.html");
-
-        this.reports = new ExtentReports();
-        this.reports.attachReporter(reportTemplate);
+        this.driver.close();
+        this.driver.quit(); // No need to run quit() if we are using FireFox
     }
 
     @AfterClass

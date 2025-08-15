@@ -17,6 +17,7 @@ import org.testng.annotations.*;
 import pages.CareerPathsPage;
 import pages.FooterClass;
 import pages.HomePage;
+import utils.ExtentReportHelper;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -30,13 +31,7 @@ public class NavigationTest {
 
     @BeforeClass
     private void setUpReport() {
-        ExtentSparkReporter reportTemplate = new ExtentSparkReporter(
-                System.getProperty("user.dir") +
-                        File.separator + "reports" +
-                        File.separator + "FULL_TestReport.html");
-
-        this.reports = new ExtentReports();
-        this.reports.attachReporter(reportTemplate);
+        this.reports = ExtentReportHelper.createReport("TDLSchoolTest");
     }
 
     @BeforeMethod
@@ -44,7 +39,7 @@ public class NavigationTest {
         String testName = method.getAnnotation(Test.class).testName();
         String description = method.getAnnotation(Test.class).description();
 
-        test = reports.createTest(testName, description);
+        test = ExtentReportHelper.createTest(reports, testName, description);
         this.driver = setUpWebDriverManage("edge");
         //this.driver.manage().window().maximize();
         this.driver.get("https://tdlschool.com/");
@@ -52,10 +47,7 @@ public class NavigationTest {
 
     @AfterMethod
     private void tearDown(ITestResult testResult) {
-        if (testResult.getStatus() == ITestResult.FAILURE) {
-            test.log(Status.FAIL, testResult.getThrowable().getMessage());
-            addScreenshotToReport(Status.FAIL, test);
-        }
+        ExtentReportHelper.checkIfTestDidFail(testResult, test, driver);
 
         this.driver.close();
         this.driver.quit(); // No need to run quit() if we are using FireFox
@@ -63,7 +55,7 @@ public class NavigationTest {
 
     @AfterClass
     private void createReport() {
-        this.reports.flush();
+        ExtentReportHelper.generateReport(this.reports);
     }
 
     @Test(testName = "Navigate to Career Paths page",
@@ -77,16 +69,7 @@ public class NavigationTest {
         homePage.clickOnCareerPathButton();
         careerPathsPage.checkPageTitle("Not sure where to start?");
         footerClass.enterEmail("test");
-
-        addScreenshotToReport(Status.PASS, test);
-    }
-
-    private void addScreenshotToReport(Status status, ExtentTest test) {
-        // Capture the screenshot as a Base64 string and prepend with the data URI scheme for a PNG image
-        String base64ScreenShot = "data:image/png;base64," + ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64);
-
-        // Log the screenshot to the report with the specified status (PASS, FAIL, etc.)
-        test.log(status, MediaEntityBuilder.createScreenCaptureFromBase64String(base64ScreenShot).build());
+        ExtentReportHelper.addScreenshotToReport(Status.INFO, test, driver);
     }
 
     @Test(testName = "Upcoming Courses check",
@@ -96,8 +79,7 @@ public class NavigationTest {
 
         homePage.verifyTDLSchoolLogoIsDisplayed();
         homePage.checkUpcomingLectureCount(4);
-
-        addScreenshotToReport(Status.PASS, test);
+        ExtentReportHelper.addScreenshotToReport(Status.INFO, test, driver);
     }
 
     private WebDriver setUpWebDriverManage(String browser) {

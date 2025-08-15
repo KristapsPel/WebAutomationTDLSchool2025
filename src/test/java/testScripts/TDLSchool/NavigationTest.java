@@ -14,6 +14,7 @@ import org.openqa.selenium.safari.SafariDriver;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
+import pages.HomePage;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -66,11 +67,9 @@ public class NavigationTest {
             description = "We are opening TDL School page and entering text in footer")
     public void openTDLSchoolPage() throws InterruptedException {
         Thread.sleep(2000);
+        HomePage homePage = new HomePage(driver, test);
 
-        test.log(Status.INFO, "Check that logo is Displayed");
-        WebElement logo = driver.findElement(By.className("navigation__logo"));
-        Assert.assertTrue(logo.isDisplayed(), "Logo is not displayed on page");
-        test.log(Status.PASS, "Logo is displayed");
+        homePage.verifyTDLSchoolLogoIsDisplayed();
 
         test.log(Status.INFO, "Click on Career Paths button");
         WebElement careerPathsLink = driver.findElement(By.linkText("Career Paths"));

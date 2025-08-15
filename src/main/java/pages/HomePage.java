@@ -1,10 +1,12 @@
 package pages;
 
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.testng.Assert;
 
 import java.util.List;
 
@@ -26,6 +28,12 @@ public class HomePage {
         this.test = test;
 
         PageFactory.initElements(driver, this);
+    }
+
+    public void verifyTDLSchoolLogoIsDisplayed() {
+        this.test.log(Status.INFO, "Verify that TDL School logo is displayed");
+        Assert.assertTrue(this.logo.isDisplayed(), "TDL School logo is not displayed on page");
+        this.test.log(Status.PASS, "TDL School logo is Displayed in page");
     }
 
 }

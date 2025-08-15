@@ -1,9 +1,9 @@
 package testScripts.TDLSchool;
 import com.aventstack.extentreports.Status;
 import org.testng.annotations.*;
-import pages.CareerPathsPage;
-import pages.FooterClass;
-import pages.HomePage;
+import pages.TDLSchoolPages.CareerPathsPage;
+import pages.TDLSchoolPages.FooterClass;
+import pages.TDLSchoolPages.HomePage;
 import testScripts.BaseTest;
 import utils.ExtentReportHelper;
 

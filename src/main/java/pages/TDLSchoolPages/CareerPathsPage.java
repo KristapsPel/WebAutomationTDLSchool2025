@@ -1,4 +1,4 @@
-package pages;
+package pages.TDLSchoolPages;
 
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;

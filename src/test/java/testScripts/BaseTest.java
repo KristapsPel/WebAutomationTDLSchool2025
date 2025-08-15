@@ -28,7 +28,9 @@ public class BaseTest {
         String testName = method.getAnnotation(Test.class).testName();
         String description = method.getAnnotation(Test.class).description();
 
-        test = ExtentReportHelper.createTest(reports, testName, description);
+        test = ExtentReportHelper.createTest(reports,
+                "["+configFileReader.getPropertyValue("project.name")+"] "+testName,
+                description);
         test.assignAuthor(configFileReader.getPropertyValue("author"));
         this.driver = WebDriverHelper.setUpWebDriverManage(configFileReader.getBrowser());
         WebDriverHelper.openBrowser(configFileReader.getUrl(), driver);

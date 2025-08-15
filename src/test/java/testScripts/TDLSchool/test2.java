@@ -1,7 +1,7 @@
 package testScripts.TDLSchool;
 
 import org.testng.annotations.Test;
-import pages.HomePage;
+import pages.TDLSchoolPages.HomePage;
 import testScripts.BaseTest;
 
 public class test2 extends BaseTest {

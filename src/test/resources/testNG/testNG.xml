@@ -11,4 +11,10 @@
             <class name="testScripts.TDLSchool.test2"/>
         </classes>
     </test>
+    <test name ="Automation Exercise Practice Task">
+        <parameter name="configFile" value="AutomationExercise.properties"/>
+        <classes>
+            <class name="testScripts.AutomationExercise.RegistrationTest"/>
+        </classes>
+    </test>
 </suite>

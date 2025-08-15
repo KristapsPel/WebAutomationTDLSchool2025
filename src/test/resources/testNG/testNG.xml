@@ -3,14 +3,12 @@
         <parameter name="configFile" value="TDLSchool.properties"/>
         <classes>
             <class name ="testScripts.TDLSchool.NavigationTest"/>
+        </classes>
+    </test>
+    <test name ="Navigation Tests2">
+        <parameter name="configFile" value="TDLSchool2.properties"/>
+        <classes>
             <class name="testScripts.TDLSchool.test2"/>
         </classes>
     </test>
-<!--    <test name ="Navigation Tests">-->
-<!--        <parameter name="configFile" value="GooglePage.properties"/>-->
-<!--        <classes>-->
-<!--            <class name ="testScripts.TDLSchool.NavigationTest"/>-->
-<!--            <class name="testScripts.TDLSchool.test2"/>-->
-<!--        </classes>-->
-<!--    </test>-->
 </suite>

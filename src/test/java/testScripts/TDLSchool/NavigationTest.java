@@ -2,27 +2,17 @@ package testScripts.TDLSchool;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.Status;
-import com.aventstack.extentreports.reporter.ExtentSparkReporter;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.safari.SafariDriver;
-import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 import pages.CareerPathsPage;
 import pages.FooterClass;
 import pages.HomePage;
 import utils.ExtentReportHelper;
-
-import java.io.File;
+import utils.WebDriverHelper;
 import java.lang.reflect.Method;
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
+
 
 public class NavigationTest {
     private WebDriver driver;
@@ -40,17 +30,14 @@ public class NavigationTest {
         String description = method.getAnnotation(Test.class).description();
 
         test = ExtentReportHelper.createTest(reports, testName, description);
-        this.driver = setUpWebDriverManage("edge");
-        //this.driver.manage().window().maximize();
-        this.driver.get("https://tdlschool.com/");
+        this.driver = WebDriverHelper.setUpWebDriverManage("chrome");
+        WebDriverHelper.openBrowser("https://tdlschool.com/", driver);
     }
 
     @AfterMethod
     private void tearDown(ITestResult testResult) {
         ExtentReportHelper.checkIfTestDidFail(testResult, test, driver);
-
-        this.driver.close();
-        this.driver.quit(); // No need to run quit() if we are using FireFox
+        WebDriverHelper.closeBrowser(driver);
     }
 
     @AfterClass
@@ -80,57 +67,5 @@ public class NavigationTest {
         homePage.verifyTDLSchoolLogoIsDisplayed();
         homePage.checkUpcomingLectureCount(4);
         ExtentReportHelper.addScreenshotToReport(Status.INFO, test, driver);
-    }
-
-    private WebDriver setUpWebDriverManage(String browser) {
-        WebDriver driver = null;
-        switch (browser) {
-            case "chrome":
-                WebDriverManager.chromedriver().setup();
-                driver = new ChromeDriver();
-                break;
-            case "firefox":
-                WebDriverManager.firefoxdriver().setup();
-                driver = new FirefoxDriver();
-                break;
-            case "edge":
-                WebDriverManager.edgedriver().setup();
-                driver = new EdgeDriver();
-                break;
-        }
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        return driver;
-    }
-
-    private WebDriver setUpWebDriverManually(String browser) {
-        WebDriver driver = null;
-        switch (browser) {
-            case "chrome":
-                System.setProperty("webdriver.chrome.driver", "src" + File.separator +
-                        "test" + File.separator +
-                        "resources" + File.separator +
-                        "drivers" + File.separator +
-                        "chromedriver.exe");
-                driver = new ChromeDriver();
-                break;
-            case "firefox":
-                System.setProperty("webdriver.gecko.driver", "src" + File.separator +
-                        "test" + File.separator +
-                        "resources" + File.separator +
-                        "drivers" + File.separator +
-                        "geckodriver.exe");
-                driver = new FirefoxDriver();
-
-                break;
-            case "edge":
-                System.setProperty("webdriver.msedge.driver", "src" + File.separator +
-                        "test" + File.separator +
-                        "resources" + File.separator +
-                        "drivers" + File.separator +
-                        "meedgedriver.exe");
-                driver = new EdgeDriver();
-                break;
-        }
-        return driver;
     }
 }

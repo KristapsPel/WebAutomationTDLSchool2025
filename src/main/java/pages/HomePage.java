@@ -36,4 +36,11 @@ public class HomePage {
         this.test.log(Status.PASS, "TDL School logo is Displayed in page");
     }
 
+    public void clickOnCareerPathButton () {
+        this.test.log(Status.INFO, "Click on Career Path");
+        Assert.assertTrue(careerPaths.isDisplayed(), "Can not find Career Path button");
+        careerPaths.click();
+        test.log(Status.PASS, " Click action on Career path did work");
+    }
+
 }

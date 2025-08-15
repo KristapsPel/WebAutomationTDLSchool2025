@@ -14,6 +14,8 @@ import org.openqa.selenium.safari.SafariDriver;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
+import pages.CareerPathsPage;
+import pages.FooterClass;
 import pages.HomePage;
 
 import java.io.File;
@@ -30,8 +32,8 @@ public class NavigationTest {
     private void setUpReport() {
         ExtentSparkReporter reportTemplate = new ExtentSparkReporter(
                 System.getProperty("user.dir") +
-                File.separator+"reports" +
-                File.separator+"FULL_TestReport.html");
+                        File.separator + "reports" +
+                        File.separator + "FULL_TestReport.html");
 
         this.reports = new ExtentReports();
         this.reports.attachReporter(reportTemplate);
@@ -47,9 +49,10 @@ public class NavigationTest {
         //this.driver.manage().window().maximize();
         this.driver.get("https://tdlschool.com/");
     }
+
     @AfterMethod
     private void tearDown(ITestResult testResult) {
-        if(testResult.getStatus() == ITestResult.FAILURE) {
+        if (testResult.getStatus() == ITestResult.FAILURE) {
             test.log(Status.FAIL, testResult.getThrowable().getMessage());
             addScreenshotToReport(Status.FAIL, test);
         }
@@ -59,44 +62,26 @@ public class NavigationTest {
     }
 
     @AfterClass
-    private void createReport (){
+    private void createReport() {
         this.reports.flush();
     }
 
-    @Test (testName = "Navigate to Career Paths page",
+    @Test(testName = "Navigate to Career Paths page",
             description = "We are opening TDL School page and entering text in footer")
-    public void openTDLSchoolPage() throws InterruptedException {
-        Thread.sleep(2000);
+    public void openTDLSchoolPage() {
         HomePage homePage = new HomePage(driver, test);
+        CareerPathsPage careerPathsPage = new CareerPathsPage(driver, test);
+        FooterClass footerClass = new FooterClass(driver, test);
 
         homePage.verifyTDLSchoolLogoIsDisplayed();
-
-        test.log(Status.INFO, "Click on Career Paths button");
-        WebElement careerPathsLink = driver.findElement(By.linkText("Career Paths"));
-        careerPathsLink.click();
-        test.log(Status.PASS, " Click action on Career path did work");
-
-        test.log(Status.INFO, "Title Not sure where to start? is displayed");
-        WebElement careerPathTitle = driver.findElement(By.tagName("h1"));
-        Assert.assertEquals(careerPathTitle.getText(),
-                "Not sure where to start?",
-                "Title is not as expected");
-        test.log(Status.PASS, "Title "+ careerPathTitle.getText()+" was displayed correctly");
-
-        test.log(Status.INFO, "Enter email in email field");
-        WebElement emailInputField = driver.findElement(By.name("email"));
-        Assert.assertTrue(emailInputField.isDisplayed(), "Email input is not Displayed");
-        emailInputField.sendKeys("test");
-        test.log(Status.PASS, "Text entered in email field");
-
-        Thread.sleep(2000);
-        test.log(Status.INFO, "Title:" + driver.getTitle());
-        test.log(Status.INFO, "URL:" + driver.getCurrentUrl());
+        homePage.clickOnCareerPathButton();
+        careerPathsPage.checkPageTitle("Not sure where to start?");
+        footerClass.enterEmail("test");
 
         addScreenshotToReport(Status.PASS, test);
     }
 
-    private void addScreenshotToReport (Status status, ExtentTest test){
+    private void addScreenshotToReport(Status status, ExtentTest test) {
         // Capture the screenshot as a Base64 string and prepend with the data URI scheme for a PNG image
         String base64ScreenShot = "data:image/png;base64," + ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64);
 
@@ -105,7 +90,7 @@ public class NavigationTest {
     }
 
     @Test(testName = "Upcoming Courses check",
-    description = "Check that correct amount of courses is shown in landing page")
+            description = "Check that correct amount of courses is shown in landing page")
     public void checkUpcomingCoursesCount() throws InterruptedException {
         HomePage homePage = new HomePage(driver, test);
 
@@ -113,10 +98,10 @@ public class NavigationTest {
 
         test.log(Status.INFO, "Check that 4 courses are displayed in upcoming section");
         int countOfVisibleCourses = driver.findElements(
-                By.cssSelector("a.course-suggestions__course-card--active"))
+                        By.cssSelector("a.course-suggestions__course-card--active"))
                 .size();
         Assert.assertEquals(countOfVisibleCourses, 5,
-                "Visible courses in Upcoming section is "+countOfVisibleCourses+
+                "Visible courses in Upcoming section is " + countOfVisibleCourses +
                         " but expected was 4.");
         test.log(Status.PASS, "Visible count of upcoming courses is as expected");
 

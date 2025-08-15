@@ -1,8 +1,16 @@
 <suite name="TDL School test suite">
     <test name ="Navigation Tests">
+        <parameter name="configFile" value="TDLSchool.properties"/>
         <classes>
             <class name ="testScripts.TDLSchool.NavigationTest"/>
             <class name="testScripts.TDLSchool.test2"/>
         </classes>
     </test>
+<!--    <test name ="Navigation Tests">-->
+<!--        <parameter name="configFile" value="GooglePage.properties"/>-->
+<!--        <classes>-->
+<!--            <class name ="testScripts.TDLSchool.NavigationTest"/>-->
+<!--            <class name="testScripts.TDLSchool.test2"/>-->
+<!--        </classes>-->
+<!--    </test>-->
 </suite>
